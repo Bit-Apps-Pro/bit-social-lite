@@ -1,0 +1,163 @@
+#bit-social-deactivate-feedback-dialog-wrapper {
+  content: '';
+  position: fixed;
+  inset: 0;
+  background-color: rgba(0, 0, 0, 70%);
+  z-index: 99999;
+  display: none;
+}
+
+#bit-social-deactivate-feedback-dialog {
+  width: 550px;
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%);
+  z-index: 999999;
+  background-color: #fff;
+  border-radius: 12px;
+  box-shadow:
+    0 0 0 1px rgba(0, 0, 0, 5%),
+    0 6px 16px 0 rgba(0, 0, 0, 8%),
+    0 3px 6px -4px rgba(0, 0, 0, 12%),
+    0 9px 28px 8px rgba(0, 0, 0, 5%);
+  font-size: 0.875rem;
+}
+
+.bit-social-feedback-text {
+  margin-inline-start: 30px;
+  margin-block-end: 4px;
+}
+
+input.bit-social-feedback-text {
+  padding: 4px 11px;
+  color: rgba(0, 0, 0, 88%);
+  line-height: 1.57;
+  width: 100%;
+  min-width: 0;
+  background-color: #fff;
+  border: 1px solid #d9d9d9;
+  border-radius: 10px;
+  transition: all 0.2s;
+}
+
+div.bit-social-feedback-text {
+  color: orange;
+}
+
+.bit-social-deactivate-feedback-dialog-input-wrapper {
+  display: flex;
+  align-items: center;
+  flex-wrap: wrap;
+  column-gap: 10px;
+  line-height: 2;
+}
+
+.bit-social-deactivate-feedback-dialog-input:not(:checked) ~ .bit-social-feedback-text {
+  display: none;
+}
+
+.bit-social-deactivate-feedback-dialog-label {
+  white-space: nowrap;
+}
+
+#bit-social-deactivate-feedback-dialog-header {
+  border-bottom: 1px solid #d9d9d9;
+  padding: 20px 24px;
+  text-align: start;
+  display: flex;
+  gap: 8px;
+  align-items: center;
+}
+
+#bit-social-close-svg {
+  box-sizing: border-box;
+  height: 30px;
+  cursor: pointer;
+  margin-left: auto;
+  padding: 8px;
+  border-radius: 50%;
+  background: #f3f3f3;
+}
+
+#bit-social-close-svg:hover {
+  background: #ecebeb;
+}
+
+#bit-social-deactivate-feedback-dialog-form {
+  padding: 20px 24px;
+}
+
+#bit-social-deactivate-feedback-dialog-form-footer {
+  display: flex;
+  justify-content: space-between;
+  padding-top: 20px;
+}
+
+#bit-social-deactivate-feedback-dialog-header-title {
+  text-transform: uppercase;
+  font-size: 0.9375rem;
+  font-weight: 500;
+}
+
+#bit-social-deactivate-feedback-dialog-form-caption {
+  margin-bottom: 20px;
+  font-size: 0.9375rem;
+  font-weight: 500;
+}
+
+#bit-social-deactivate-feedback-dialog-form-footer button {
+  padding: 4px 15px;
+  border-radius: 10px;
+  box-shadow: none;
+  border: 1px solid transparent;
+  cursor: pointer;
+  height: 32px;
+  color: rgba(0, 0, 0, 88%);
+}
+
+button#bit-social-deactivate-feedback-form-submit {
+  background: #1c1c1c;
+  color: #fff;
+  position: relative;
+  display: flex;
+  align-items: center;
+}
+
+.bit-social-loading::after {
+  content: '';
+  opacity: 1;
+  border-top: 0.1563rem solid #a3a3a3;
+  border-right: 0.1563rem solid #a3a3a3;
+  border-bottom: 0.1563rem solid #a3a3a3;
+  border-left: 0.1563rem solid #1c1c1c;
+  border-radius: 50%;
+  display: inline-block;
+  width: 1.25rem;
+  height: 1.25rem;
+  margin-left: 6px;
+  transform: translateZ(0);
+  animation: bit-social-loader 1.1s infinite linear;
+}
+
+@keyframes bit-social-loader {
+  from {
+    transform: rotate(0);
+  }
+
+  to {
+    transform: rotate(360deg);
+  }
+}
+
+button#bit-social-deactivate-feedback-form-submit:hover {
+  background: #1c1c1c;
+}
+
+button#bit-social-deactivate-feedback-form-skip {
+  background: transparent;
+}
+
+button#bit-social-deactivate-feedback-form-skip:hover {
+  background-color: #efefef;
+}

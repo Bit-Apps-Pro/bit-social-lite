@@ -1,0 +1,148 @@
+.inputLabel {
+  composes: mb-2 d-ib fw-med from global;
+  font-size: 14px;
+  color: var(--txt);
+}
+
+.input {
+  composes: py-2 w-100 d-b pos-rel from global;
+  border-radius: calc(var(--border-rad) - 3px) !important;
+  font-family: var(--font-family);
+  transition: var(--tran-3);
+  color: var(--txt) !important;
+}
+
+.inputGroup {
+  composes: pos-rel from global;
+}
+
+.leadingIconInput.xs {
+  padding-left: 1.7rem;
+}
+
+.leadingIconInput.sm {
+  padding-left: 2rem;
+}
+
+.leadingIconInput.md {
+  padding-left: 2.1875rem;
+}
+
+.leadingIconInput.lg {
+  padding-left: 2.5rem;
+}
+
+.trailingIconInput.xs {
+  padding-right: 1.8rem;
+}
+
+.trailingIconInput.sm {
+  padding-right: 2rem;
+}
+
+.trailingIconInput.md {
+  padding-right: 2.1875rem;
+}
+
+.trailingIconInput.lg {
+  padding-right: 2.5rem;
+}
+
+.icon {
+  composes: pos-abs from global;
+  top: 50%;
+  z-index: 2;
+  transform: translateY(-50%);
+}
+
+.leadingIcon {
+  left: 0.5rem;
+  color: var(--txt-3);
+}
+
+.trailingIcon {
+  right: 0.625rem;
+  color: var(--txt-3);
+}
+
+.xs {
+  composes: px-1 from global;
+  border-radius: calc(var(--border-rad) - 6px);
+  height: 24px;
+  font-size: 11px;
+}
+
+.sm {
+  composes: px-2 from global;
+  border-radius: calc(var(--border-rad) - 4px);
+  height: 32px;
+  font-size: 13px;
+}
+
+.md {
+  composes: px-2 from global;
+  height: 40px;
+  font-size: 15px;
+}
+
+.lg {
+  composes: px-3 from global;
+  border-radius: calc(var(--border-rad) + 1px);
+  height: 48px;
+  font-size: 16px;
+}
+
+.outline {
+  border: 2px solid var(--border-20) !important;
+  background-color: var(--bg) !important;
+}
+
+.filled {
+  border: none !important;
+  background-color: var(--bg-5) !important;
+}
+
+.ghost {
+  border: none !important;
+  background: none !important;
+}
+
+.ghost:hover {
+  box-shadow: 0 0 0 1px var(--accent-color);
+}
+
+.ghost.xs {
+  font-size: 12px;
+}
+
+.ghost.sm {
+  font-size: 13px;
+}
+
+.input:focus {
+  outline: none;
+  box-shadow: var(--focus-shadow) !important;
+}
+
+.spinnerLoader {
+  composes: pos-abs from global;
+  top: 50%;
+  z-index: 2;
+  transform: translateY(-50%);
+  right: 0.625rem;
+}
+
+.invalidInput {
+  outline: none;
+  border: 2px solid var(--danger-txt) !important;
+}
+
+.invalidInput:focus {
+  outline: none;
+  box-shadow: var(--focus-shadow-danger);
+}
+
+.helperText {
+  composes: mt-1 ml-1 fw-med from global;
+  font-size: 12px;
+}

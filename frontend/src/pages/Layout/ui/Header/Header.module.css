@@ -1,0 +1,33 @@
+/* stylelint-disable rule-empty-line-before */
+.navItem {
+  composes: link flx ai-cen col-gap-1 pos-rel fw-med from global;
+  padding: 10px 14px;
+  z-index: 0;
+  height: 32px;
+}
+
+.header {
+  padding: 12px 24px;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  position: sticky;
+  top: 0;
+  z-index: 99;
+}
+
+.pulseButton {
+  animation: pulse 1s infinite;
+}
+
+@keyframes pulse {
+  0% {
+    transform: scale(1);
+  }
+  50% {
+    transform: scale(1.05);
+  }
+  100% {
+    transform: scale(1);
+  }
+}

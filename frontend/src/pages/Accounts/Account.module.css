@@ -1,0 +1,11 @@
+.accountsWrapper {
+  padding: 0 20px;
+}
+
+.cardGridStyle {
+  width: 20px;
+  height: 220px;
+  border-radius: 14px;
+  margin: 8px;
+  padding: 14px;
+}
