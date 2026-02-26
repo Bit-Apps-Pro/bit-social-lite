@@ -1,14 +1,13 @@
 import $socialTemplates from '@common/globalStates/socialTemplates/$socialTemplates'
 import { type SocialTemplates } from '@common/globalStates/socialTemplates/SocialTemplatesType'
 import request from '@common/helpers/request'
-import { type UseQueryResult } from '@tanstack/react-query'
 import { useQuery } from '@tanstack/react-query'
 import { useSetAtom } from 'jotai'
 
 export default function useSocialTemplates() {
   const setSocialTemplates = useSetAtom($socialTemplates)
 
-  const { data, isLoading }: UseQueryResult<SocialTemplates, Error> = useQuery({
+  const { data, isLoading } = useQuery({
     queryFn: async () => {
       const { data: socialTemplates } = await request<SocialTemplates>(
         'socialTemplates',
@@ -21,8 +20,6 @@ export default function useSocialTemplates() {
         setSocialTemplates(socialTemplates)
         return socialTemplates
       }
-
-      return []
     },
     queryKey: ['socialTemplates']
   })

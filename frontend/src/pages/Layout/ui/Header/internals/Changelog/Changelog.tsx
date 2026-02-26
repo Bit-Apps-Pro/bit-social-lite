@@ -2,6 +2,7 @@ import { $bitSocial } from '@common/globalStates'
 import $changelogModal from '@common/globalStates/$changelogModal'
 import { __ } from '@common/helpers/i18nWrap'
 import request from '@common/helpers/request'
+import useTracking from '@plugin-commons/components/SupportPage/data/useTracking'
 import { Modal, Tag, Typography } from 'antd'
 import { produce } from 'immer'
 import { useAtom } from 'jotai'
@@ -9,6 +10,7 @@ import { type ReactNode } from 'react'
 import { Fragment } from 'react'
 import { LuMoveUpRight } from 'react-icons/lu'
 
+import AnalyticsOption from './AnalyticsOption'
 import cls from './Changelog.module.css'
 import changelogInfo from './data/changelogInfo'
 import { type ChangeTopic } from './data/changelogInfo.type'
@@ -25,6 +27,7 @@ export default function Changelog() {
   const [bitSocial, setBitSocial] = useAtom($bitSocial)
   const [isModalOpen, setIsModalOpen] = useAtom($changelogModal)
   const changeLog = changelogInfo[bitSocial.version]
+  const { tracking } = useTracking()
 
   const handleCancel = async () => {
     setIsModalOpen(false)
@@ -51,7 +54,9 @@ export default function Changelog() {
 
   return (
     <Modal
+      closeIcon={!!tracking?.allowTracking}
       footer={false}
+      maskClosable={false}
       onCancel={handleCancel}
       open={isModalOpen}
       title={__("What's New?")}
@@ -66,7 +71,9 @@ export default function Changelog() {
 
       {Object.entries(changeLog.changes).map(([title, obj]) => (
         <div key={title}>
-          <Tag color={getColor[title]}>{obj.label}</Tag>
+          <Tag className="mb-2" color={getColor[title]}>
+            {obj.label}
+          </Tag>
           {obj.tag && <span>{obj.tag}</span>}
           <ul className={cls.unorderedList}>
             {obj?.list &&
@@ -84,10 +91,12 @@ export default function Changelog() {
           rel="noopener noreferrer"
           target="_blank"
         >
+          {' '}
           {__('Click Here')}
           <LuMoveUpRight size={12} style={{ transform: 'translateY(-4px)' }} />
         </a>
       </Typography.Text>
+      <AnalyticsOption />
     </Modal>
   )
 }

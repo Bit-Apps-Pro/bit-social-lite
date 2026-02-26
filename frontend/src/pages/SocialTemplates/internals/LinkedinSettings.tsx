@@ -5,6 +5,7 @@ import { type SocialTemplates } from '@common/globalStates/socialTemplates/Socia
 import { __ } from '@common/helpers/i18nWrap'
 import { autoSaveNotify } from '@common/helpers/toastMessage'
 import useMemoDebounce from '@common/hooks/useMemoDebounce'
+import ImagePromptNameSelect from '@utilities/ImagePromptNameSelect'
 import MessageBox from '@utilities/MessageBox'
 import { Card, Col, Flex, message, Row, Select, Space, Switch, theme, Typography } from 'antd'
 import { produce } from 'immer'
@@ -45,6 +46,14 @@ export default function LinkedinSettings() {
 
     setTemplates(prev =>
       produce(prev, draft => {
+        // Clear promptImage if changing postingType away from isPromptImage
+        if (
+          key === 'postingType' &&
+          prev.linkedin.postingType === 'isPromptImage' &&
+          val !== 'isPromptImage'
+        ) {
+          draft.linkedin.promptImage = ''
+        }
         draft.linkedin[key] = val
       })
     )
@@ -70,8 +79,16 @@ export default function LinkedinSettings() {
           {!isProClient && <LuCrown color="#ff8609" size={20} />}
         </Space>
       ),
-
       value: 'isAllImages'
+    },
+    {
+      label: (
+        <Space align="center">
+          {__('Prompt Image')}
+          {!isProClient && <LuCrown color="#ff8609" size={20} />}
+        </Space>
+      ),
+      value: 'isPromptImage'
     }
   ]
 
@@ -108,6 +125,23 @@ export default function LinkedinSettings() {
                 </div>
               </Flex>
             </Card>
+
+            {templates.linkedin.postingType === 'isPromptImage' && (
+              <Card style={{ marginTop: 10 }}>
+                <Flex gap={20} justify="space-between">
+                  <Card.Meta
+                    description={__('Select an AI prompt for image generation.')}
+                    title={__('Prompt Name')}
+                  />
+                  <div>
+                    <ImagePromptNameSelect
+                      onChange={val => handleChange('promptImage', val)}
+                      value={templates.linkedin.promptImage}
+                    />
+                  </div>
+                </Flex>
+              </Card>
+            )}
 
             <Card style={{ marginTop: 10 }}>
               <Flex gap={20} justify="space-between">

@@ -1,15 +1,18 @@
 import request from '@common/helpers/request'
 import { useQuery } from '@tanstack/react-query'
 
-export type SmartTags = Record<
-  string,
-  {
-    description: string
-    key: string
-    label: string
-    type: string
-  }
->
+interface TagInfo {
+  description: string
+  key: string
+  label: string
+  type: string
+}
+
+export interface SmartTags {
+  advance: Record<string, TagInfo>
+  post: Record<string, TagInfo>
+  product: Record<string, TagInfo>
+}
 
 export default function useSmartTags() {
   const { data, isLoading } = useQuery({

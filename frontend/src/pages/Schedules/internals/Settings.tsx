@@ -4,7 +4,7 @@ import { $scheduleData } from '@common/globalStates/$scheduleModalData'
 import { convertWordPressToDayjsDateFormat, dateTime } from '@common/helpers/globalHelpers'
 import { __, sprintf } from '@common/helpers/i18nWrap'
 import DatePicker from '@components/DatePicker'
-import { Alert, Form, Input, message, Select, Space, TimePicker, Typography } from 'antd'
+import { Alert, Form, Input, message, Select, Space, TimePicker, Tooltip, Typography } from 'antd'
 import { type TimeRangePickerProps } from 'antd/es/time-picker'
 import dayjs from 'dayjs'
 import { produce } from 'immer'
@@ -99,21 +99,19 @@ export default function Settings() {
           value={scheduleData.settings?.name}
         />
       </Form.Item>
-
       <Form.Item label={__('Start date & time')}>
         <Space direction="vertical">
           <DatePicker onChangeDate={onChangeDate} stateData={scheduleData} type="SCHEDULE" />
           {errors.startedAt && <Text type="danger">{errors.startedAt} </Text>}
           <Text mark>
             {sprintf(
-              __('Local time: %s ; Time Zone: (%s)'),
+              __('Local time: %1$s ; Time Zone: (%2$s)'),
               dayjs(localTime).format(calendarFormat),
               timeZone
             )}
           </Text>
         </Space>
       </Form.Item>
-
       <Form.Item label={__('Post interval')} style={{ margin: '10px 0' }}>
         <Space>
           <Input
@@ -132,7 +130,6 @@ export default function Settings() {
           />
         </Space>
       </Form.Item>
-
       {scheduleData.id &&
         scheduleData.settings.started_at &&
         dayjs(scheduleData.settings.started_at).diff(dateTime(timeZone)) < 1 && (
@@ -161,15 +158,52 @@ export default function Settings() {
         <Select
           onChange={handleChange('post_publish_order')}
           options={[
-            { label: __('Randomly without duplicates'), value: '1' },
-            { label: __('Randomly'), value: '2' },
-            { label: __('Start from the oldest to new posts'), value: '3' },
-            { label: __('Start from the latest to old posts'), value: '4' }
+            {
+              label: (
+                <Tooltip title={__('Random order. Each post is used only once.')}>
+                  {__('Randomly without duplicates')}
+                </Tooltip>
+              ),
+              value: '1'
+            },
+            {
+              label: <Tooltip title={__('Random order. Posts may repeat.')}>{__('Randomly')}</Tooltip>,
+              value: '2'
+            },
+            {
+              label: (
+                <Tooltip title={__('Starts from earliest posts and moves forward.')}>
+                  {__('Start from the oldest to new posts')}
+                </Tooltip>
+              ),
+              value: '3'
+            },
+            {
+              label: (
+                <Tooltip title={__('Publishes from past posts toward newly added / future posts.')}>
+                  {__(
+                    'Starts from the oldest posts and continues to the latest (including upcoming posts)'
+                  )}
+                </Tooltip>
+              ),
+              value: '5'
+            },
+            {
+              label: (
+                <Tooltip
+                  title={__(
+                    'Starts from the most recently added posts (based on schedule start date), then goes back to older ones.'
+                  )}
+                >
+                  {__('Start from the latest to old posts')}
+                </Tooltip>
+              ),
+              value: '4'
+            }
           ]}
           value={scheduleData.settings.post_publish_order}
         />
       </Form.Item>
-
       <Form.Item>
         <Space direction="vertical">
           <Space>
@@ -190,7 +224,6 @@ export default function Settings() {
           />
         </Space>
       </Form.Item>
-
       <Form.Item label={__('Set sleep days')}>
         <Select
           allowClear

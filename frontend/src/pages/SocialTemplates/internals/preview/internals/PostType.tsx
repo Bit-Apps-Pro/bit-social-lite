@@ -3,7 +3,14 @@ import FeaturesImage from './FeaturesImage'
 import LinkCard from './LinkCard'
 
 interface PostTypeProps {
-  type: 'isAllImages' | 'isFeaturedImage' | 'isLinkCard' | 'isProductImage' | 'onlyMessage'
+  type:
+    | 'isAllImages'
+    | 'isCustomImage'
+    | 'isFeaturedImage'
+    | 'isLinkCard'
+    | 'isProductImage'
+    | 'isPromptImage'
+    | 'onlyMessage'
 }
 
 export default function PostType({ type }: PostTypeProps) {

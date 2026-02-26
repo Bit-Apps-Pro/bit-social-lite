@@ -62,8 +62,6 @@ export interface ShareBoxType {
   shareNowModalType: ShareNowModalType['type']
 }
 
-// export type MediaListType = { id: number; url: string; filename: string }[]
-
 export type MediaListType = UploadFile[]
 
 export interface PlatformValueType {
@@ -102,6 +100,7 @@ interface BlueskyValueType {
   link: string
   media: MediaListType
 }
+
 interface InstagramValueType {
   comment: string
   content: string
@@ -109,13 +108,17 @@ interface InstagramValueType {
   isAllImages: boolean
   media: MediaListType
 }
-interface InstagramValueType {
+interface ThreadsValueType {
   comment: string
   content: string
   edit: boolean
   isAllImages: boolean
+  isLinkCard: boolean
+  link: string
   media: MediaListType
+  topic: string
 }
+
 interface TiktokValueType {
   allowComment: boolean
   content: string
@@ -178,6 +181,7 @@ interface PinterestValueType {
   isLinkCard: boolean
   link: string
   media: MediaListType
+  title: string
 }
 
 interface TelegramValueType {
@@ -199,6 +203,7 @@ export interface ShareNowTemplatesType {
   linkedin: LinkedinValueType
   pinterest: PinterestValueType
   telegram: TelegramValueType
+  threads: ThreadsValueType
   tiktok: TiktokValueType
   tumblr: TumblrValueType
   twitter: TwitterValueType

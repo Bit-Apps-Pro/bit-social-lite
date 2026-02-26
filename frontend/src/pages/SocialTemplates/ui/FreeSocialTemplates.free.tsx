@@ -13,7 +13,9 @@ const TumblrSettings = lazy(() => import('../internals/TumblrSettings'))
 const TelegramSettings = lazy(() => import('../internals/TelegramSettings'))
 const DiscordSettings = lazy(() => import('../internals/DiscordSettings'))
 const PinterestSettings = lazy(() => import('../internals/PinterestSettings'))
+const ThreadsSettings = lazy(() => import('../internals/ThreadsSettings'))
 const InstagramSettings = lazy(() => import('../internals/InstagramSettings'))
+const TiktokSettings = lazy(() => import('../internals/TiktokSettings'))
 const BlueskySettings = lazy(() => import('../internals/BlueskySettings'))
 const LineSettings = lazy(() => import('../internals/LineSettings'))
 
@@ -52,6 +54,12 @@ export default function FreeSocialTemplates() {
       }
       case 'telegram': {
         return <TelegramSettings />
+      }
+      case 'threads': {
+        return <ThreadsSettings />
+      }
+      case 'tiktok': {
+        return <TiktokSettings />
       }
       case 'tumblr': {
         return <TumblrSettings />

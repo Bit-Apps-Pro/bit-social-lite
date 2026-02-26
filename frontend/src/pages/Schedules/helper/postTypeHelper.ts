@@ -25,9 +25,11 @@ export const postTypes = <T extends keyof ScheduleTemplatesType>(
 
 export type PostingNameKeyType =
   | 'isAllImages'
+  | 'isCustomImage'
   | 'isFeaturedImage'
   | 'isLinkCard'
   | 'isProductImage'
+  | 'isPromptImage'
   | 'isVideo'
 
 type PostingNameType = Record<
@@ -40,6 +42,10 @@ type PostingNameType = Record<
 
 export const postingName: PostingNameType = {
   isAllImages: { name: 'All Images', tooltip: 'Enable to the post all images shared' },
+  isCustomImage: {
+    name: 'Custom Image',
+    tooltip: 'Enable to share custom selected images'
+  },
   isFeaturedImage: {
     name: 'Featured Image',
     tooltip: 'Enable to the post featured image shared'
@@ -48,6 +54,10 @@ export const postingName: PostingNameType = {
   isProductImage: {
     name: 'Product Image',
     tooltip: 'Enable to the product image shared'
+  },
+  isPromptImage: {
+    name: 'Prompt Image',
+    tooltip: 'Enable to share AI generated prompt images'
   },
   isVideo: { name: 'Video', tooltip: 'Enable to the post video shared' }
 }

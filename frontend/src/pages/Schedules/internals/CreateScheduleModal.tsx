@@ -170,7 +170,7 @@ export default function CreateScheduleModal({
           }
         }}
         title={isScheduleModalOpen.type ? modalTitle[isScheduleModalOpen.type] : ''}
-        width={tabActive === '3' ? 800 : 600}
+        width={tabActive === '3' ? 900 : 600}
       >
         <ScheduleModalTabs handleTabActive={handleTabActive} tabActive={tabActive} token={token} />
       </Modal>

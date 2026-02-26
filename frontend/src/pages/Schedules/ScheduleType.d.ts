@@ -45,97 +45,144 @@ interface ScheduleAccountsType {
 
 interface FacebookValueType {
   content: string
+  customImages: string[]
   isAllImages: boolean
+  isCustomImage: boolean
   isFeaturedImage: boolean
   isLinkCard: boolean
   isProductImage: boolean
-  isProductImage: boolean
+  isPromptImage: boolean
   isVideo: boolean
+  promptImage: string
 }
 
 interface LinkedinValueType {
   content: string
+  customImages: string[]
   isAllImages: boolean
+  isCustomImage: boolean
   isFeaturedImage: boolean
   isLinkCard: boolean
   isProductImage: boolean
+  isPromptImage: boolean
   isVideo: boolean
+  promptImage: string
 }
 
 interface TwitterValueType {
   content: string
+  customImages: string[]
   isAllImages: boolean
+  isCustomImage: boolean
   isFeaturedImage: boolean
   isLinkCard: boolean
   isProductImage: boolean
+  isPromptImage: boolean
+  promptImage: string
 }
 
 interface PinterestValueType {
   content: string
+  customImages: string[]
   isAllImages: boolean
+  isCustomImage: boolean
   isFeaturedImage: boolean
   isLinkCard: boolean
   isProductImage: boolean
+  isPromptImage: boolean
+  promptImage: string
+  title: string
 }
 
 interface GoogleBusinessProfileValueType {
   button: string
   content: string
+  customImages: string[]
   isAllImages: boolean
+  isCustomImage: boolean
   isFeaturedImage: boolean
   isLinkCard: boolean
   isProductImage: boolean
+  isPromptImage: boolean
+  promptImage: string
 }
 
 interface DiscordValueType {
   content: string
+  customImages: string[]
   isAllImages: boolean
+  isCustomImage: boolean
   isFeaturedImage: boolean
   isLinkCard: boolean
   isProductImage: boolean
+  isPromptImage: boolean
+  promptImage: string
 }
 
 interface BlueskyValueType {
   comment: string
   content: string
+  customImages: string[]
   isAllImages: boolean
+  isCustomImage: boolean
   isFeaturedImage: boolean
   isLinkCard: boolean
   isProductImage: boolean
+  isPromptImage: boolean
+  promptImage: string
 }
 
 interface LineValueType {
   content: string
+  customImages: string[]
   isAllImages: boolean
+  isCustomImage: boolean
   isFeaturedImage: boolean
   isLinkCard: boolean
   isProductImage: boolean
+  isPromptImage: boolean
+  promptImage: string
 }
 
 interface TelegramValueType {
   content: string
+  customImages: string[]
   isAllImages: boolean
+  isCustomImage: boolean
   isFeaturedImage: boolean
   isLinkCard: boolean
   isProductImage: boolean
+  isPromptImage: boolean
+  promptImage: string
 }
 
 interface InstagramValueType {
   comment: string
   content: string
+  customImages: string[]
   isAllImages: boolean
+  isCustomImage: boolean
   isFeaturedImage: boolean
   isProductImage: boolean
+  isPromptImage: boolean
   isVideo: boolean
+  promptImage: string
 }
-interface InstagramValueType {
+
+interface ThreadsValueType {
   comment: string
   content: string
+  customImages: string[]
   isAllImages: boolean
+  isCustomImage: boolean
   isFeaturedImage: boolean
+  isLinkCard: boolean
   isProductImage: boolean
-  isVideo: boolean
+  isPromptImage: boolean
+  promptImage: string
+  topic: string
 }
+
 interface TiktokValueType {
   allowComment: boolean
   content: string
@@ -146,13 +193,18 @@ interface TiktokValueType {
   privacyLevel: string
   stitch: boolean
 }
+
 interface TumblrValueType {
   content: string
+  customImages: string[]
   isAllImages: boolean
+  isCustomImage: boolean
   isFeaturedImage: boolean
   isLinkCard: boolean
   isProductImage: boolean
+  isPromptImage: boolean
   isVideo: boolean
+  promptImage: string
 }
 
 export interface ScheduleTemplatesType {
@@ -165,6 +217,7 @@ export interface ScheduleTemplatesType {
   linkedin: LinkedinValueType
   pinterest: PinterestValueType
   telegram: TelegramValueType
+  threads: ThreadsValueType
   tiktok: TiktokValueType
   tumblr: TumblrValueType
   twitter: TwitterValueType

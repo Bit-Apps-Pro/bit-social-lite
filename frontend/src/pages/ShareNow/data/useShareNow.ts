@@ -1,5 +1,4 @@
 import request from '@common/helpers/request'
-import { type UseQueryResult } from '@tanstack/react-query'
 import { keepPreviousData, useQuery } from '@tanstack/react-query'
 
 import { type ShareNowDataType } from '../ShareNowType'
@@ -14,15 +13,16 @@ interface ShareNowQueryDataType {
 }
 
 export default function useShareNow(pageNumber: number, pageLimit: number) {
-  const {
-    data,
-    isFetching,
-    isLoading,
-    refetch
-  }: UseQueryResult<{ data: ShareNowQueryDataType }, Error> = useQuery({
+  const { data, isFetching, isLoading, refetch } = useQuery({
     enabled: !!pageLimit && !!pageNumber,
     placeholderData: keepPreviousData,
-    queryFn: async () => request(`share-now/${pageNumber}/${pageLimit}`, undefined, undefined, 'GET'),
+    queryFn: async () =>
+      request<ShareNowQueryDataType>(
+        `share-now/${pageNumber}/${pageLimit}`,
+        undefined,
+        undefined,
+        'GET'
+      ),
     queryKey: ['share-now', [pageNumber, pageLimit]],
     refetchInterval: 5000
   })

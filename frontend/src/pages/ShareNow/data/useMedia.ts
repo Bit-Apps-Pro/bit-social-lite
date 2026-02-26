@@ -1,5 +1,4 @@
 import request from '@common/helpers/request'
-import { type UseQueryResult } from '@tanstack/react-query'
 import { useQuery } from '@tanstack/react-query'
 import { type UploadFile } from 'antd'
 
@@ -13,8 +12,8 @@ export interface MediaType {
 }
 
 export default function useMedia() {
-  const { data, isLoading, refetch }: UseQueryResult<{ data: UploadFile[] }, Error> = useQuery({
-    queryFn: async () => request(`all-media`, undefined, undefined, 'GET'),
+  const { data, isLoading, refetch } = useQuery({
+    queryFn: async () => request<UploadFile[]>(`all-media`, undefined, undefined, 'GET'),
     queryKey: ['media']
   })
 

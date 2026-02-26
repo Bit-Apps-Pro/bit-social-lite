@@ -189,7 +189,7 @@ export default function ShareNowScheduleModal({
 
             <Text mark>
               {sprintf(
-                __('Local time: %s ; Time Zone: (%s)'),
+                __('Local time: %1$s ; Time Zone: (%2$s)'),
                 dayjs(localTime).format(calendarFormat),
                 timeZone
               )}

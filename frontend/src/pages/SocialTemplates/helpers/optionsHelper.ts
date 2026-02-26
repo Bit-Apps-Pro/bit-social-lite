@@ -4,7 +4,7 @@ import { __ } from '@common/helpers/i18nWrap'
 export function isProPostingOption(key: string, val: string): boolean {
   const { isProClient } = getAtom($appConfig)
 
-  const proOptionValues = new Set(['isAllImages', 'isProductImage'])
+  const proOptionValues = new Set(['isAllImages', 'isCustomImage', 'isProductImage', 'isPromptImage'])
 
   return key === 'postingType' && proOptionValues.has(val) && !isProClient
 }
@@ -20,5 +20,9 @@ export const postingTypeOptions = [
   {
     label: __('All Images'),
     value: 'isAllImages'
+  },
+  {
+    label: __('Prompt Image'),
+    value: 'isPromptImage'
   }
 ]

@@ -12,6 +12,7 @@ import MoreOptionButton from './MoreOptionButton'
 const navItems = [
   // { label: 'Home', path: '/' },
   { label: __('Accounts'), path: '/accounts' },
+  { label: __('AI Prompts'), path: '/ai-prompts' },
   { label: __('WP Auto Post'), path: '/auto-post' },
   { label: __('WP Post Schedules'), path: '/schedules' },
   { label: __('Share Now'), path: '/share-now' },

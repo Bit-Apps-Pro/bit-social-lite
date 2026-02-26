@@ -119,7 +119,7 @@ export default function ShareBox({ shareNowModalClose, shareNowModalType }: Shar
         </span>
       )
     }))
-  }, [accounts, allAccountIds])
+  }, [platforms])
 
   const setAccountIds = (selectedAccount: ScheduleAccountsType) =>
     setShareNowData((prevScheduleData: ShareNowType) =>
@@ -214,7 +214,6 @@ export default function ShareBox({ shareNowModalClose, shareNowModalType }: Shar
   }
 
   const handleTabActive = (key: string) => {
-    setShareNowData({ ...shareNowData })
     setCurrentTab(key)
   }
 
@@ -273,11 +272,18 @@ export default function ShareBox({ shareNowModalClose, shareNowModalType }: Shar
   )
 
   useEffect(() => {
-    setShareNowData((prev: ShareNowType) =>
-      produce(prev, draft => {
+    setShareNowData((prev: ShareNowType) => {
+      const prevPlatforms = prev.platforms
+      if (
+        prevPlatforms.length === platforms.length &&
+        prevPlatforms.every((p, i) => p === platforms[i])
+      ) {
+        return prev
+      }
+      return produce(prev, draft => {
         draft.platforms = platforms
       })
-    )
+    })
 
     setCurrentTab(platforms[0])
   }, [platforms])

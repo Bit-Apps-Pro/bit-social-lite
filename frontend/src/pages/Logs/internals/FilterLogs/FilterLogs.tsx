@@ -76,6 +76,10 @@ export default function FilterLogs() {
     {
       label: __('Instagram'),
       value: 'instagram'
+    },
+    {
+      label: __('Threads'),
+      value: 'threads'
     }
   ]
 

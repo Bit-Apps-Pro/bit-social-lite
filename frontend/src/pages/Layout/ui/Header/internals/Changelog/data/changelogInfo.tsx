@@ -1,24 +1,36 @@
+/* eslint-disable perfectionist/sort-objects */
 import { __ } from '@common/helpers/i18nWrap'
 
 import { type ChangelogInfo } from './changelogInfo.type'
 
 const changelogInfo: ChangelogInfo = {
-  '1.4.1': {
+  '1.13.0': {
     changes: {
       features: {
         label: __('Features'),
         list: [
-          'Telegram: Send text messages, images, and clickable links directly to Telegram groups and channels',
-          'Google Business Profile: Updated character limits — now supports 1,500 characters for the description'
+          'WP scheduled posts: Added a new post order option starts from the oldest posts and continues to the latest (including upcoming posts)',
+          'Added a new Smart Tag: {post_date} for inserting the post publish date'
         ]
       },
-
-      coming: {
-        label: __('Upcoming Integrations'),
-        list: ['Threads']
+      improvement: {
+        label: __('Improvements'),
+        list: [
+          'Improved hashtag formatting: Previous (#new #year) Now (#newYear)',
+          'Trimmed Threads topic text to 50 characters to prevent posting errors'
+        ]
+      },
+      fixed: {
+        label: __('Fixed'),
+        list: ['Few minor bug fixes & improvements']
       }
+
+      // coming: {
+      //   label: __('Upcoming feature'),
+      //   list: ['AI integration']
+      // }
     },
-    date: 'July 17, 2025'
+    date: 'February 18, 2026'
   }
 }
 
