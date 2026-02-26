@@ -9,7 +9,9 @@ frontend/src/coverage/*
 frontend/storybook-static/*
 frontend/node_modules/
 frontend/locale.pot
+frontend/src/pages/Schedules/internals/Platforms/Pro*.tsx
 .php-cs-fixer.cache
+
 tests.config.php
 .phpunit.result.cache
 eslint-cache/
@@ -18,3 +20,7 @@ yarn-error.log
 frontend/language/frontend-strings.pot
 .env
 build
+pro
+*.pro.tsx
+
+

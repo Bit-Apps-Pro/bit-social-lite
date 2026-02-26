@@ -33,7 +33,7 @@ class ScheduleInfo
 
     public $publishedPostIds;
 
-    public $postIdUpated = false;
+    public $postIdUpdated = false;
 
     public function __construct($schedule)
     {
@@ -108,14 +108,16 @@ class ScheduleInfo
 
         $settings = $this->settings();
 
+        $orderTypeLatestToOld = 4;
+
         $filter['post_type'] = !empty($postFilters['post_type']) ? $postFilters['post_type'] : '';
-        $filter['tax_query'] = !empty($postFilters['categories_and_tags']) ? (new WpPostController())->categoryAndTags($postFilters['categories_and_tags']) : '';
+        $filter['tax_query'] = !empty($postFilters['categories_and_tags']) ? (new WpPostController())->categoryAndTags($postFilters['categories_and_tags']) : ''; // phpcs:ignore WordPress.DB.SlowDBQuery.slow_db_query_tax_query -- tax_query is required for category/tag filtering.
 
         if (!empty($settings['post_publish_order'])) {
-            if ((int) $settings['post_publish_order'] === 3) {
-                $filter['order'] = 'ASC';
-            } else {
+            if ((int) $settings['post_publish_order'] === $orderTypeLatestToOld) {
                 $filter['order'] = 'DESC';
+            } else {
+                $filter['order'] = 'ASC';
             }
         }
 
@@ -155,8 +157,10 @@ class ScheduleInfo
     {
         $publishedPostIds = $this->publishedPostIds();
         $settings = $this->settings();
+        $randomly = 2;
+        $randomWithoutDuplicate = 1;
 
-        if (!empty($settings['post_publish_order']) && (int) $settings['post_publish_order'] === 2) {
+        if (!empty($settings['post_publish_order']) && (int) $settings['post_publish_order'] === $randomly) {
             return $posts[array_rand($posts)];
         }
 
@@ -164,10 +168,14 @@ class ScheduleInfo
             return !\in_array($post['id'], $publishedPostIds);
         });
 
-        $this->postIdUpated = true;
+        $this->postIdUpdated = true;
 
         if (empty($posts)) {
             return false;
+        }
+
+        if (!empty($settings['post_publish_order']) && (int) $settings['post_publish_order'] === $randomWithoutDuplicate) {
+            return $posts[array_rand($posts)];
         }
 
         return array_shift($posts);
@@ -175,7 +183,7 @@ class ScheduleInfo
 
     public function postIdUpdate($post)
     {
-        if ($this->postIdUpated) {
+        if ($this->postIdUpdated && !empty($post['id'])) {
             $this->publishedPostIds[] = $post['id'];
             $postIds = implode(',', $this->publishedPostIds);
             $this->schedule->update(['published_post_ids' => $postIds]);
@@ -215,7 +223,7 @@ class ScheduleInfo
     {
         $this->schedule->cron_status = Schedule::cronStatus['INACTIVE'];
         $this->schedule->status = Schedule::status['COMPLETED'];
-        $this->schedule->ended_at = date('Y-m-d H:i:s', current_time('timestamp'));
+        $this->schedule->ended_at = gmdate('Y-m-d H:i:s', current_time('timestamp'));
         $this->schedule->next_published_at = null;
 
         return (bool) ($this->schedule->save());
@@ -224,8 +232,8 @@ class ScheduleInfo
     public function isScheduleCreatedToday():bool
     {
         $scheduleSettings = $this->schedule;
-        $ScheduleCreatedAt = date('Y-m-d', strtotime($scheduleSettings['created_at']));
-        $todayDate = date('Y-m-d', current_time('timestamp'));
+        $ScheduleCreatedAt = gmdate('Y-m-d', strtotime($scheduleSettings['created_at']));
+        $todayDate = gmdate('Y-m-d', current_time('timestamp'));
         $valid = $ScheduleCreatedAt === $todayDate;
 
         if ($valid) {

@@ -5,6 +5,7 @@ import discordAppAuthorization from './helper/discord/discordCustomAppsOAuth2'
 import googleBusinessProfileOAuth2 from './helper/googleBusinessProfile/googleBusinessProfileOAuth2'
 import instagramAppAuthorization from './helper/instagram/instagramAppsOAuth2'
 import pinterestAppAuthorization from './helper/pinterest/pinterestCustomAppsOAuth2'
+import threadsAppAuthorization from './helper/threads/threadsAppsOAuth2'
 import tiktokAppAuthorization from './helper/tiktok/tiktokAppsOAuth2'
 import tumblrAppAuthorization from './helper/tumblr/tumblrOauth2'
 import { customTwitterAppAuthorizationOne } from './helper/twitter/twitterCustomAppsOAuth1'
@@ -29,6 +30,9 @@ export default function proOneClickAuth(platform: string, version?: string) {
     }
     case 'pinterest': {
       return pinterestAppAuthorization
+    }
+    case 'threads': {
+      return threadsAppAuthorization
     }
     case 'tiktok': {
       return tiktokAppAuthorization

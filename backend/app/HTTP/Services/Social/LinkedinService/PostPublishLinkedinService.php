@@ -3,6 +3,8 @@
 namespace BitApps\Social\HTTP\Services\Social\LinkedinService;
 
 use AllowDynamicProperties;
+use BitApps\Social\Config;
+use BitApps\Social\Deps\BitApps\WPKit\Hooks\Hooks;
 use BitApps\Social\Deps\BitApps\WPKit\Http\Client\HttpClient;
 use BitApps\Social\HTTP\Services\Interfaces\SocialInterface;
 use BitApps\Social\HTTP\Services\Traits\LoggerTrait;
@@ -29,6 +31,12 @@ class PostPublishLinkedinService implements SocialInterface
 
     private $postUrl = 'https://www.linkedin.com/feed/update';
 
+    private $authError = [];
+
+    private $linkCardError = [];
+
+    private $linkedinData = [];
+
     public function __construct()
     {
         $this->httpHandler = new HttpClient();
@@ -52,6 +60,7 @@ class PostPublishLinkedinService implements SocialInterface
         $account_name = $account_detail->account_name;
 
         $access_token = Hash::decrypt($account_detail->access_token);
+
         $expires_in = $account_detail->expires_in;
         $refresh_token = Hash::decrypt($account_detail->refresh_token);
         $refresh_token_expires_in = $account_detail->refresh_token_expires_in;
@@ -59,14 +68,10 @@ class PostPublishLinkedinService implements SocialInterface
         $client_id = Hash::decrypt($account_detail->client_id);
         $client_secret = Hash::decrypt($account_detail->client_secret);
 
-        $tokenUpdateData = $this->refreshHandler->tokenExpiryCheck($client_id, $client_secret, $access_token, $expires_in, $refresh_token, $refresh_token_expires_in);
-
-        if ($tokenUpdateData->access_token !== $access_token) {
-            $account_detail->access_token = Hash::encrypt($tokenUpdateData->access_token);
-            $account_detail->expires_in = $tokenUpdateData->expires_in;
-            $account_detail->refresh_token = Hash::encrypt($tokenUpdateData->refresh_token);
-            $account_detail->refresh_token_expires_in = $tokenUpdateData->refresh_token_expires_in;
-            $this->refreshHandler->saveRefreshedToken($account_detail);
+        if ((int) $expires_in < time()) {
+            ((int) $refresh_token_expires_in > time())
+                ? $access_token = $this->refreshHandler->tokenExpiryCheck($client_id, $client_secret, $refresh_token, $account_id)
+                : $this->authError[] = 'Your LinkedIn connection has expired. Please reconnect your account to continue.';
         }
 
         if ($scheduleType === Schedule::scheduleType['DIRECT_SHARE']) {
@@ -75,7 +80,7 @@ class PostPublishLinkedinService implements SocialInterface
             }, $template->media);
 
             $post_data['content'] = $template->content ?? null;
-            $post_data['images'] = $templateMedia ?? null;
+            $post_data['media'] = $templateMedia ?? null;
             $post_data['link'] = $template->link ?? null;
 
             $template->isFeaturedImage = false;
@@ -93,37 +98,35 @@ class PostPublishLinkedinService implements SocialInterface
             $post_data = $this->replacePostContent($postId, $template);
         }
 
-        $postPublishResponse = $this->linkedinPostPublish($post_data, $account_detail, $access_token, $postId, $scheduleType);
+        $this->linkedinData['post'] = $this->normalizePostData($post_data, true);
 
-        if (\array_key_exists('keepLogs', $data) && !$data['keepLogs']) {
-            return;
-        }
+        $postPublishResponse = $this->linkedinPostPublish($post_data, $account_detail, $access_token, $postId);
 
-        $this->logAndRetry($schedule_id, $account_id, $account_name, $postId, $postPublishResponse, $retry, $logId);
+        $this->linkedinData['response'] = $postPublishResponse;
+
+        Hooks::doAction(Config::withPrefix('linkedin_post_publish'), $this->normalizePostData($post_data), $this->linkedinData['response']);
+
+        $this->logAndRetry($schedule_id, $account_id, $account_name, $postId, $postPublishResponse, $retry, $logId, $data);
+
+        return $this->linkedinData;
     }
 
-    public function linkedinPostPublish($post_data, $account_detail, $access_token, $post_id, $scheduleType)
+    public function linkedinPostPublish($post_data, $account_detail, $access_token, $post_id)
     {
         $ownerUrn = $account_detail->urn;
-        $post_content = $post_data['content'] ?? null;
-        $feature_image = $post_data['featureImage'] ?? null;
-        $allImages = $post_data['allImages'] ?? null;
+        $post_content = $post_data['content'] ? $this->escapeSpecialCharacters($post_data['content']) : null;
+        $media = $post_data['media'] ?? null;
         $post_link = $post_data['link'] ?? null;
         $video_url = $post_data['video'] ?? null;
 
-        if ($scheduleType === Schedule::scheduleType['DIRECT_SHARE']) {
-            $feature_image = $post_data['images'][0] ?? null;
-            $allImages = $post_data['images'] ?? null;
-        }
-
-        if (!empty($post_content) && empty($feature_image) && empty($post_link) && empty($allImages) && empty($video_url)) {
+        if (!empty($post_content) && empty($media) && empty($post_link) && empty($video_url)) {
             return $this->textPublish($ownerUrn, $post_content, $access_token);
         } elseif (!empty($post_content) && !empty($post_link)) {
             $feature_image = wp_get_attachment_url(get_post_thumbnail_id($post_id));
 
             return $this->linkCardPublish($ownerUrn, $post_content, $access_token, $post_link, $feature_image, $post_id);
-        } elseif (!empty($feature_image) || !empty($allImages)) {
-            $allImageUrns = $this->uploadImage($access_token, $ownerUrn, $feature_image, $allImages);
+        } elseif (!empty($media)) {
+            $allImageUrns = $this->uploadImage($access_token, $ownerUrn, $media);
 
             return $this->linkedinPhotoPost($access_token, $ownerUrn, $allImageUrns, $post_content);
         } elseif (!empty($video_url)) {
@@ -140,7 +143,7 @@ class PostPublishLinkedinService implements SocialInterface
 
         $data = Helper::commonParams($ownerUrn, $post_content);
 
-        $requestBody = $this->httpHandler->request($postPublishUrl, 'POST', json_encode($data), $header, null);
+        $requestBody = $this->httpHandler->request($postPublishUrl, 'POST', wp_json_encode($data), $header, null);
         $responseHeader = $this->httpHandler->getResponseHeaders();
 
         if (isset($responseHeader['x-restli-id'])) {
@@ -161,30 +164,31 @@ class PostPublishLinkedinService implements SocialInterface
         $postPublishUrl = $this->baseUrl . '/v2/posts';
         $header = Helper::publishHeader($access_token);
 
-        $commonDataParams = Helper::commonParams($ownerUrn, $post_content);
+        $params = Helper::commonParams($ownerUrn, $post_content);
 
-        if (!empty($feature_image)) {
-            $feature_image = $this->uploadImage($access_token, $ownerUrn, $feature_image, []);
-        }
-        $linkData = [
-            'content' => [
-                'article' => [
-                    'source'    => $post_link,
-                    'thumbnail' => $feature_image ? $feature_image : '',
-                    'title'     => $post_id ? get_the_title($post_id) : '',
-                ]
-            ],
-        ];
+        if (wp_http_validate_url($post_link)) {
+            $linkData = $this->getLinkDetails($post_link, $ownerUrn, $access_token, $post_id, $feature_image);
 
-        if (empty($linkData['content']['article']['thumbnail'])) {
-            unset($linkData['content']['article']['thumbnail']);
+            $linkData = [
+                'content' => [
+                    'article' => $linkData
+                ],
+            ];
+            $params = array_merge($params, $linkData);
+        } else {
+            $this->linkCardError[] = 'The URL you entered is not valid.';
         }
 
-        $data = array_merge($commonDataParams, $linkData);
-
-        $this->httpHandler->request($postPublishUrl, 'POST', json_encode($data), $header, null);
+        $response = $this->httpHandler->request($postPublishUrl, 'POST', wp_json_encode($params), $header, null);
 
         $responseHeader = $this->httpHandler->getResponseHeaders();
+
+        if (property_exists($response, 'errorDetails')) {
+            return [
+                'status'  => 0,
+                'message' => wp_json_encode($response->errorDetails)
+            ];
+        }
 
         if (isset($responseHeader['x-restli-id'])) {
             return [
@@ -192,24 +196,19 @@ class PostPublishLinkedinService implements SocialInterface
                 'message' => $responseHeader['x-restli-id']
             ];
         }
-
-        return [
-            'status'  => 0,
-            'message' => 'Link are not send, please try again'
-        ];
     }
 
-    public function uploadImage($access_token, $ownerUrn, $feature_image, $allImages)
+    public function uploadImage($access_token, $ownerUrn, $media)
     {
         $initializeImageUrl = $this->baseUrl . '/v2/images?action=initializeUpload';
-        $params = json_encode([
+        $params = wp_json_encode([
             'initializeUploadRequest' => [
                 'owner' => $ownerUrn,
             ]
         ]);
         $initializeHeader = Helper::initializeHeader($access_token);
 
-        return Helper::imageUpload($initializeImageUrl, $params, $initializeHeader, $feature_image, $allImages, $access_token, $this->httpHandler);
+        return Helper::imageUpload($initializeImageUrl, $params, $initializeHeader, $media, $access_token, $this->httpHandler);
     }
 
     public function linkedinPhotoPost($accessToken, $ownerUrn, $allImageUrns, $post_content)
@@ -220,7 +219,7 @@ class PostPublishLinkedinService implements SocialInterface
         $dataContent['content'] = Helper::makeImageContent($allImageUrns);
 
         $postData = array_merge($commonDataParams, $dataContent);
-        $params = json_encode($postData);
+        $params = wp_json_encode($postData);
 
         $commonHeader = Helper::publishHeader($accessToken);
         $header = array_merge($commonHeader, ['Content-Length' => \strlen($params)]);
@@ -248,7 +247,7 @@ class PostPublishLinkedinService implements SocialInterface
 
         $fileContent = Helper::getContents($video_url);
 
-        $initData = json_encode([
+        $initData = wp_json_encode([
             'initializeUploadRequest' => [
                 'owner'           => $ownerUrn,
                 'fileSizeBytes'   => \strlen($fileContent),
@@ -320,7 +319,7 @@ class PostPublishLinkedinService implements SocialInterface
                 'LinkedIn-Version'          => static::LINKEDIN_VERSION
             ];
 
-            $finalVideoBody = json_encode($final);
+            $finalVideoBody = wp_json_encode($final);
 
             $finalUploadVideoRes = $this->httpHandler->request($finalUploadVideo, 'POST', $finalVideoBody, $finalUploadVideoHeader);
             if (empty($finalUploadVideoRes)) {
@@ -347,7 +346,7 @@ class PostPublishLinkedinService implements SocialInterface
         ];
 
         $commonDataParams = Helper::commonParams($ownerUrn, $post_content);
-        $finalVideoData = json_encode(array_merge($commonDataParams, $videoContentParams));
+        $finalVideoData = wp_json_encode(array_merge($commonDataParams, $videoContentParams));
 
         $sendVideoHeaders = array_merge(Helper::publishHeader($access_token), ['LinkedIn-Version' => static::LINKEDIN_VERSION]);
 
@@ -373,7 +372,40 @@ class PostPublishLinkedinService implements SocialInterface
         }
     }
 
-    private function logAndRetry($schedule_id, $account_id, $account_name, $postId, $postPublishResponse, $retry, $logId)
+    public function getLinkDetails($link, $ownerUrn, $accessToken, $postId = null, $featureImage = null)
+    {
+        $html = $this->httpHandler->request($link, 'GET', []);
+        $ogTags = ['og:title', 'og:description', 'og:image', 'og:url'];
+        $meta = [];
+
+        if ($postId) {
+            $meta['og:title'] = get_the_title($postId);
+            $meta['og:image'] = $featureImage;
+        } else {
+            foreach ($ogTags as $tag) {
+                if (preg_match('/<meta\s+property=["\']' . preg_quote($tag, '/') . '["\']\s+content=["\'](.*?)["\']\s*\/?>/i', $html, $matches)) {
+                    $meta[$tag] = $matches[1];
+                } else {
+                    $meta[$tag] = null;
+                }
+            }
+        }
+        $linkData['source'] = $link;
+        $linkData['title'] = $meta['og:title'] ? html_entity_decode($meta['og:title'], ENT_QUOTES | ENT_HTML5, 'UTF-8') : '';
+
+        if (!empty($meta['og:image'])) {
+            $thumbnail = $this->uploadImage($accessToken, $ownerUrn, [$meta['og:image']]);
+            $linkData['thumbnail'] = $thumbnail[0];
+        }
+
+        if (!empty($meta['og:description'])) {
+            $linkData['description'] = $meta['og:description'];
+        }
+
+        return $linkData;
+    }
+
+    private function logAndRetry($schedule_id, $account_id, $account_name, $postId, $postPublishResponse, $retry, $logId, $data)
     {
         $responseData = [
             'schedule_id' => $schedule_id,
@@ -388,12 +420,32 @@ class PostPublishLinkedinService implements SocialInterface
             'status'   => $postPublishResponse['status'] ?? 0
         ];
 
+        if (\count($this->authError)) {
+            $responseData['details']['authError'] = $this->authError;
+        }
+
+        if (\count($this->linkCardError)) {
+            $responseData['details']['linkCardError'] = $this->linkCardError;
+        }
+
+        $hookResponse = [
+            'account_id'   => $account_id,
+            'account_name' => $account_name,
+            'post_url'     => $responseData['details']['post_url'],
+            'status'       => $responseData['status'],
+        ];
+
+        $this->linkedinData['platform'] = 'linkedin';
+        $this->linkedinData['response'] = $hookResponse;
+
         if ($retry) {
             $this->logUpdate($responseData, $logId);
 
             return;
         }
 
-        $this->logCreate($responseData);
+        if (!(\array_key_exists('keepLogs', $data) && $data['keepLogs'] === false)) {
+            $this->logCreate($responseData);
+        }
     }
 }

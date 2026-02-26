@@ -16,6 +16,7 @@ const Logs = lazy(() => import('@pages/Logs'))
 const Root = lazy(() => import('@pages/root/Root'))
 const Schedules = lazy(() => import('@pages/Schedules'))
 const Calendar = lazy(() => import('@pages/Calendar'))
+const AIPrompts = lazy(() => import('@pages/AiHub'))
 const Settings = lazy(() => import('@pages/Settings'))
 const ShareNow = lazy(() => import('@pages/ShareNow'))
 const SocialTemplates = lazy(() => import('@pages/SocialTemplates'))
@@ -58,6 +59,8 @@ export default function AppRoutes() {
             <Route element={<Schedules />} path="schedules" />
 
             <Route element={<Calendar />} path="Calendar" />
+
+            <Route element={<AIPrompts />} path="ai-prompts" />
 
             <Route element={<ShareNow />} path="share-now" />
 

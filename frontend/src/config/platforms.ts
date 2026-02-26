@@ -9,6 +9,7 @@ type PlatformType = Record<
   | 'linkedin'
   | 'pinterest'
   | 'telegram'
+  | 'threads'
   | 'tiktok'
   | 'tumblr'
   | 'twitter',
@@ -55,6 +56,10 @@ const platforms: PlatformType = {
   tiktok: {
     image: '',
     name: 'TikTok'
+  },
+  threads: {
+    image: '',
+    name: 'Threads'
   },
   bluesky: {
     image: '',

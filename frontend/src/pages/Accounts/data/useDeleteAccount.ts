@@ -8,6 +8,7 @@ export default function useDeleteAccount() {
       request(`account/${account}/destroy`, undefined, undefined, 'POST'),
     onSuccess: () => {
       queryClient.invalidateQueries({ queryKey: ['accounts'] })
+      queryClient.invalidateQueries({ queryKey: ['ai-platform-accounts'] })
     }
   })
 

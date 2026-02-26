@@ -2,6 +2,8 @@
 
 namespace BitApps\Social\HTTP\Services\Schedule;
 
+use BitApps\Social\Config;
+use BitApps\Social\Deps\BitApps\WPKit\Hooks\Hooks;
 use BitApps\Social\HTTP\Services\Social\Social;
 use BitApps\Social\HTTP\Services\Traits\LoggerTrait;
 use BitApps\Social\Model\Schedule;
@@ -22,7 +24,7 @@ final class SocialExecution
 
     public function isSleep($settings)
     {
-        $currentDay = date('D');
+        $currentDay = gmdate('D');
         $sleepTime = isset($settings['sleep_days']) ? $settings['sleep_days'] : [];
 
         if (\in_array($currentDay, $sleepTime)) {
@@ -86,15 +88,25 @@ final class SocialExecution
 
         if ($this->schedule->scheduleType === Schedule::scheduleType['SCHEDULE_SHARE']) {
             $filterArgument = $this->schedule->postFilterArgument();
+
             $postPublishOrders = $this->schedule->settings()['post_publish_order'] ?? null;
             $posts = $this->getPosts($filterArgument);
             $post = $this->schedule->orderPosts($posts);
             $orderTypeRandomly = '2';
+            $orderTypeLatest = '5';
+
+            $isSpecificPostId = empty($filterArgument['post__in']);
+
             $this->schedule->postIdUpdate($post);
 
             $isAllPostPublished = $this->schedule->isAllPostPublished($posts);
 
-            if ($postPublishOrders !== $orderTypeRandomly && $isAllPostPublished) {
+            $isOrderTypeRandomly = $postPublishOrders === $orderTypeRandomly;
+            $isOrderTypeLatest = $postPublishOrders === $orderTypeLatest && $isSpecificPostId;
+
+            $shouldCompleteSchedule = empty($posts) || (!$isOrderTypeRandomly && !$isOrderTypeLatest && $isAllPostPublished);
+
+            if ($shouldCompleteSchedule) {
                 $status = $this->schedule->scheduleComplete();
 
                 if ($status) {
@@ -105,9 +117,14 @@ final class SocialExecution
             if ($postPublishOrders) {
                 $this->schedule->nextPostUpdate();
             }
+
+            if (!$post) {
+                return;
+            }
         }
 
         $templates = $this->schedule->templates();
+        $publishPostData = [];
 
         foreach ($this->schedule->accounts as $account) {
             $isPlatFormExists = $this->isPlatFormExists($account);
@@ -133,9 +150,16 @@ final class SocialExecution
                 continue;
             }
 
+            $platformName = $isPlatFormExists['platform'];
+
             $platform = new Social(new $isPlatFormExists['class']());
-            if (isset($templates[$isPlatFormExists['platform']])) {
-                $template = $templates[$isPlatFormExists['platform']];
+
+            if (!$isPlatFormExists) {
+                continue;
+            }
+
+            if (isset($templates[$platformName])) {
+                $template = $templates[$platformName];
 
                 $data = [
                     'template'        => $template,
@@ -145,12 +169,14 @@ final class SocialExecution
                 ];
 
                 if ($this->schedule->scheduleType === Schedule::scheduleType['SCHEDULE_SHARE']) {
-                    $data['post'] = $post;
-                    $data['post']['ID'] = $data['post']['id'];
+                    $data['post'] = (array) get_post($post['id']);
+                    $data['post']['ID'] = $post['id'];
                 }
 
-                $platform->publishPost($data);
+                $publishPostData[] = $platform->publishPost($data);
             }
         }
+
+        Hooks::doAction(Config::withPrefix('all_platforms_post_publish'), $publishPostData);
     }
 }

@@ -1,6 +1,6 @@
 {
   "name": "bit-apps",
-  "version": "1.4.1",
+  "version": "1.13.0",
   "license": "ISC",
   "author": "Bit Apps Team",
   "type": "module",
@@ -110,7 +110,7 @@
     "@vitest/ui": "^2.1.8",
     "@wordpress/i18n": "^5.14.0",
     "autoprefixer": "^10.4.20",
-    "bitapps-dev-utils": "github:Bit-Apps-Pro/bitapps-dev-utils#d8beb5f184cfe84385e60f91e4c7ed6c08bdb799",
+    "bitapps-dev-utils": "github:Bit-Apps-Pro/bitapps-dev-utils#9687003a3bc25902aaf82cfe7408041b33b3dba8",
     "commander": "^12.1.0",
     "concurrently": "^9.1.2",
     "conventional-changelog-atom": "^5.0.0",

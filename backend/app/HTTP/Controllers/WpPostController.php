@@ -53,6 +53,8 @@ class WpPostController
             $all_terms = get_terms([
                 'taxonomy'   => array_values($taxonomyData),
                 'hide_empty' => false,
+                'lang'       => '',
+
             ]);
 
             // Organize terms by taxonomy label if terms are found
@@ -106,7 +108,7 @@ class WpPostController
         }
 
         if (isset($filterOptions->categories_and_tags) && is_numeric($filterOptions->categories_and_tags)) {
-            $filter['tax_query'] = $this->categoryAndTags($filterOptions->categories_and_tags);
+            $filter['tax_query'] = $this->categoryAndTags($filterOptions->categories_and_tags); // phpcs:ignore WordPress.DB.SlowDBQuery.slow_db_query_tax_query -- tax_query is required for category/tag filtering.
         }
 
         if (!empty($filterOptions->custom_date_range)) {

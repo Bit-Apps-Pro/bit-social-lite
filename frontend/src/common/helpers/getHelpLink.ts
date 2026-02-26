@@ -15,6 +15,7 @@ const docsLink = {
   pinterest: 'https://bit-social.com/docs/accounts/connect-your-pinterest-account-with-bit-social/',
   telegram:
     'https://bit-social.com/documentation/accounts/connect-your-telegram-account-with-bit-social/',
+  threads: 'https://bit-social.com/documentation/accounts/connect-your-threads-account-with-bit-social/',
   tiktok: 'https://bit-social.com/documentation/accounts/connect-your-tiktok-account-with-bit-social/',
   tumblr: 'https://bit-social.com/documentation/accounts/connect-your-tumblr-account-with-bit-social/',
   twitter: 'https://bit-social.com/documentation/accounts/connect-your-twitter-account-with-bit-social/'

@@ -102,6 +102,18 @@ export default function ConnectAccount({ btnType = 'default' }: ConnectAccountTy
 
           <Col md={6} sm={12} xs={24}>
             <AppConnectCard
+              clientId={clientIds?.threads.id}
+              closeConnectModal={handleCancel}
+              isConnectLoading={isLoadingClientIds}
+              platform="threads"
+              setAccountModal={setIsModalOpen}
+              status={clientIds?.threads.status}
+              types={['oneClick', 'custom']}
+            />
+          </Col>
+
+          <Col md={6} sm={12} xs={24}>
+            <AppConnectCard
               clientId={clientIds?.googleBusinessProfile.id}
               closeConnectModal={handleCancel}
               isConnectLoading={isLoadingClientIds}

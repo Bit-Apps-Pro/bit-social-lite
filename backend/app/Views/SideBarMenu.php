@@ -47,73 +47,81 @@ class SideBarMenu
             'Dashboard' => [
                 'parent'     => Config::SLUG,
                 'type'       => 'submenu',
-                'name'       => __('Home'),
+                'name'       => __('Home', 'bit-social'),
                 'capability' => 'manage_options',
                 'slug'       => Config::SLUG . '#/',
             ],
             'Accounts' => [
                 'parent'     => Config::SLUG,
                 'type'       => 'submenu',
-                'name'       => __('Accounts'),
+                'name'       => __('Accounts', 'bit-social'),
                 'capability' => 'manage_options',
                 'slug'       => Config::SLUG . '#/accounts',
+            ],
+            'AI Prompts' => [
+                'parent'     => Config::SLUG,
+                'type'       => 'submenu',
+                'name'       => __('AI Prompts', 'bit-social'),
+                'capability' => 'manage_options',
+                'slug'       => Config::SLUG . '#/ai-prompts',
             ],
             'Auto Post' => [
                 'parent'     => Config::SLUG,
                 'type'       => 'submenu',
-                'name'       => __('WP Auto Post'),
+                'name'       => __('WP Auto Post', 'bit-social'),
                 'capability' => 'manage_options',
                 'slug'       => Config::SLUG . '#/auto-post',
             ],
             'Schedules' => [
                 'parent'     => Config::SLUG,
                 'type'       => 'submenu',
-                'name'       => __('WP Post Schedules'),
+                'name'       => __('WP Post Schedules', 'bit-social'),
                 'capability' => 'manage_options',
                 'slug'       => Config::SLUG . '#/schedules',
             ],
             'Share Now' => [
                 'parent'     => Config::SLUG,
                 'type'       => 'submenu',
-                'name'       => __('Share Now'),
+                'name'       => __('Share Now', 'bit-social'),
                 'capability' => 'manage_options',
                 'slug'       => Config::SLUG . '#/share-now',
             ],
             'Calendar' => [
                 'parent'     => Config::SLUG,
                 'type'       => 'submenu',
-                'name'       => __('Calendar'),
+                'name'       => __('Calendar', 'bit-social'),
                 'capability' => 'manage_options',
                 'slug'       => Config::SLUG . '#/calendar',
             ],
             'Templates' => [
                 'parent'     => Config::SLUG,
                 'type'       => 'submenu',
-                'name'       => __('Templates'),
+                'name'       => __('Templates', 'bit-social'),
                 'capability' => 'manage_options',
                 'slug'       => Config::SLUG . '#/templates',
             ],
             'Logs' => [
                 'parent'     => Config::SLUG,
                 'type'       => 'submenu',
-                'name'       => __('Logs'),
+                'name'       => __('Logs', 'bit-social'),
                 'capability' => 'manage_options',
                 'slug'       => Config::SLUG . '#/logs',
             ],
             'Settings' => [
                 'parent'     => Config::SLUG,
                 'type'       => 'submenu',
-                'name'       => __('Settings'),
+                'name'       => __('Settings', 'bit-social'),
                 'capability' => 'manage_options',
                 'slug'       => Config::SLUG . '#/settings',
             ],
             'Support' => [
                 'parent'     => Config::SLUG,
                 'type'       => 'submenu',
-                'name'       => __('License & Support'),
+                'name'       => __('License & Support', 'bit-social'),
                 'capability' => 'manage_options',
                 'slug'       => Config::SLUG . '#/support',
             ],
+
         ];
     }
 
@@ -142,4 +150,64 @@ class SideBarMenu
             }
         }
     }
+
+    public function addOfferMenuItem()
+    {
+        if (Config::isProActivated()) {
+            return;
+        }
+
+        add_submenu_page(
+            Config::SLUG,
+            'BFCM 62% OFF',
+            'BFCM 62% OFF',
+            'manage_options',
+            esc_url('https://bit-social.com/special-discount/')
+        );
+    }
+
+    public function addOfferButtonStyle()
+    {
+        global $submenu;
+
+        if (!isset($submenu[Config::SLUG]) || Config::isProActivated()) {
+            return;
+        }
+
+        $count = \count($submenu[Config::SLUG]);
+        $submenu[Config::SLUG][$count - 1][] = 'bit-social-offer-button';
+        ?>
+<style>
+    @keyframes pulseUpgrade {
+        0% {
+            transform: scale(1);
+            box-shadow: 0 0 0 rgba(104, 23, 255, .2);
+        }
+
+        50% {
+            transform: scale(1.08);
+            box-shadow: 0 0 14px rgba(104, 23, 255, .5);
+        }
+
+        100% {
+            transform: scale(1);
+            box-shadow: 0 0 0 rgba(104, 23, 255, .2);
+        }
+    }
+
+    .bit-social-offer-button a {
+        background-color: #6817FF !important;
+        color: #fff !important;
+        border-radius: 20px !important;
+        padding: 6px 12px !important;
+        font-weight: 600 !important;
+        margin: 0 6px !important;
+        display: inline-block;
+        animation: pulseUpgrade 1.3s ease-in-out infinite;
+    }
+</style>
+<?php
+
+    }
 }
+?>

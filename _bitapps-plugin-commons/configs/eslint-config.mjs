@@ -5,35 +5,40 @@ import i18next from 'eslint-plugin-i18next'
 import importPlugin from 'eslint-plugin-import'
 import jsxA11Y from 'eslint-plugin-jsx-a11y'
 import perfectionist from 'eslint-plugin-perfectionist'
-import prettier from 'eslint-plugin-prettier'
+import eslintConfigPrettier from 'eslint-config-prettier/flat'
 import promise from 'eslint-plugin-promise'
 import react from 'eslint-plugin-react'
 import reactHooks from 'eslint-plugin-react-hooks'
 import reactRefresh from 'eslint-plugin-react-refresh'
 import eslintPluginUnicorn from 'eslint-plugin-unicorn'
 import unusedImports from 'eslint-plugin-unused-imports'
+import { defineConfig } from 'eslint/config'
 import globals from 'globals'
 import tseslint from 'typescript-eslint'
 
 import translateObjProp from './obj-prop-translate.mjs'
 
-export default tseslint.config(
+export default defineConfig(
+  {
+    ignores: [
+      '**/*.gen.ts',
+      '**/vite.config.ts',
+      '**/commitlint.config.js',
+      '**/node_modules/**',
+      '**/build/**',
+      '**/dist/**',
+      '**/coverage/**',
+      '**/eslint-config.mjs'
+    ]
+  },
   eslint.configs.recommended,
+  tseslint.configs.recommended,
   ...tseslint.configs.strict,
   ...tseslint.configs.stylistic,
   perfectionist.configs['recommended-natural'],
   i18next.configs['flat/recommended'],
   jsxA11Y.flatConfigs.recommended,
   {
-    ignores: [
-      '**/routeTree.gen.ts',
-      '**/vite.config.ts',
-      '**/commitlint.config.js',
-      '**/node_modules',
-      '**/build',
-      '**/coverage',
-      '**/.eslintrc.js'
-    ],
     languageOptions: {
       ecmaVersion: 'latest',
       globals: globals.browser,
@@ -46,7 +51,6 @@ export default tseslint.config(
     plugins: {
       import: fixupPluginRules(importPlugin),
       jsxA11Y,
-      prettier,
       promise,
       react,
       'react-hooks': fixupPluginRules(reactHooks),
@@ -171,7 +175,6 @@ export default tseslint.config(
       'perfectionist/sort-modules': ['error', { partitionByComment: true, partitionByNewLine: true }],
       'perfectionist/sort-objects': ['error', { partitionByComment: true, partitionByNewLine: true }],
 
-      'prettier/prettier': ['warn', {}],
       'react-hooks/exhaustive-deps': 'warn',
       'react/destructuring-assignment': 0,
       'react/jsx-filename-extension': [1, { extensions: ['.js', '.jsx', '.ts', '.tsx'] }],
@@ -255,5 +258,6 @@ export default tseslint.config(
       'import/resolver': { typescript: { alwaysTryTypes: true, project: ['./tsconfig.json'] } },
       react: { version: 'detect' }
     }
-  }
+  },
+  eslintConfigPrettier
 )

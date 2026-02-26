@@ -18,7 +18,9 @@ export const accountSaveFooterMessage = (platform: string) => {
       return (
         <>
           {sprintf(
-            __('If you need to add another %s  account, simply log out of or switch %s accounts first.'),
+            __(
+              'If you need to add another %1$s  account, simply log out of or switch %2$s accounts first.'
+            ),
             platform,
             platform
           )}

@@ -29,6 +29,8 @@ Route::noAuth()->group(
         Route::post('changelog-version/update', [ChangelogController::class, 'updateChangelogVersion']);
 
         Route::post('authorize', [AuthController::class, 'authorize']);
+        Route::post('ai-authorize', [AuthController::class, 'aiAuthorize']);
+
         Route::get('post-types', [WpPostController::class, 'getPostTypes']);
         Route::get('categories', [WpPostController::class, 'getCategoriesAndTags']);
         Route::post('filtered-posts', [WpPostController::class, 'getFilteredPosts']);
@@ -47,6 +49,7 @@ Route::noAuth()->group(
         Route::post('retry', [RetryController::class, 'retry']);
 
         Route::get('accounts', [AccountController::class, 'index']);
+        Route::get('ai-platform-accounts', [AccountController::class, 'getAIPlatformAccounts']);
         Route::post('account/save', [AccountController::class, 'store']);
         Route::post('account/{account}/destroy', [AccountController::class, 'destroy']);
         Route::post('account/{account}/account-schedule', [AccountController::class, 'findScheduleByAccountId']);
@@ -59,8 +62,6 @@ Route::noAuth()->group(
         Route::post('custom-app/{customApp}/destroy', [CustomAppController::class, 'destroy']);
 
         Route::get('smart-tags', [ScheduleController::class, 'getSmartTags']);
-
-        Route::post('upload-files', [ShareNowController::class, 'uploadFile']);
         Route::get('all-media', [ShareNowController::class, 'getAllMedia']);
         Route::post('share-now', [ShareNowController::class, 'store']);
         Route::get('share-now/{page}/{limit}', [ShareNowController::class, 'index']);

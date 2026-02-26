@@ -469,5 +469,39 @@
       "type": "content",
       "message": "Telegram must have media or text message"
     }
+  },
+  "threads": {
+    "content": {
+      "length": 500
+    },
+    "comment": {
+      "length": 500
+    },
+    "topic": {
+      "length": 50
+    },
+    "video": {
+      "size": {
+        "value": 0,
+        "unit": "MB"
+      },
+      "length": {
+        "value": 0,
+        "unit": "minute"
+      },
+      "ext": ["MP4"]
+    },
+    "errorMessage": {
+      "desc": {
+        "text": "Threads description should not larger than 1024 characters"
+      },
+      "media": {
+        "text": "Invalid video"
+      }
+    },
+    "requirement": {
+      "type": "content",
+      "message": "Threads must have media or text message"
+    }
   }
 }

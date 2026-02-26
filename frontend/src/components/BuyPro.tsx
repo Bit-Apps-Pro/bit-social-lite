@@ -52,7 +52,7 @@ export default function BuyPro() {
       </Space>
       <div className="p-2 ta-cen w-100">
         <Link
-          href="https://bit-social.com/#pricing"
+          href="https://bit-social.com/pricing/"
           rel="noopener noreferrer nofollow"
           strong
           style={{ whiteSpace: 'nowrap' }}
@@ -65,6 +65,7 @@ export default function BuyPro() {
               fontSize: '20px',
               fontWeight: 600,
               height: '100%',
+              padding: '10px 20px',
               width: '200px'
             }}
             type="primary"

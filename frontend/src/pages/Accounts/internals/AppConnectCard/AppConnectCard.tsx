@@ -23,7 +23,7 @@ const { Title } = Typography
 
 const connectName = {
   custom: __('Connect Custom %s App'),
-  login: __('%s'),
+  login: __('Connect %s'),
   oneClick: __('Connect %s')
 }
 

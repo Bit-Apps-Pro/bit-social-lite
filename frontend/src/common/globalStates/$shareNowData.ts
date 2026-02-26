@@ -1,3 +1,4 @@
+/* eslint-disable translate-obj-prop/translate-obj-prop */
 import { type ShareNowType } from '@pages/ShareNow/ShareNowType'
 import { atom } from 'jotai'
 
@@ -8,7 +9,7 @@ export const defaultShareNowData = () => ({
   },
   platforms: [],
   settings: {
-    name: '',
+    name: 'Untitled Share now',
     post_interval_type: 'hour',
     post_interval_value: 1,
     repeat: false,
@@ -46,8 +47,26 @@ export const defaultShareNowData = () => ({
     instagram: { comment: '', content: '', edit: false, isAllImages: true, media: [] },
     line: { content: '', edit: false, isAllImages: false, isLinkCard: false, link: '', media: [] },
     linkedin: { content: '', edit: false, isAllImages: false, isLinkCard: false, link: '', media: [] },
-    pinterest: { content: '', edit: false, isAllImages: false, isLinkCard: false, link: '', media: [] },
+    pinterest: {
+      content: '',
+      edit: false,
+      isAllImages: false,
+      isLinkCard: false,
+      link: '',
+      media: [],
+      title: ''
+    },
     telegram: { content: '', edit: false, isAllImages: false, isLinkCard: false, link: '', media: [] },
+    threads: {
+      comment: '',
+      content: '',
+      edit: false,
+      isAllImages: false,
+      isLinkCard: false,
+      link: '',
+      media: [],
+      topic: ''
+    },
     tiktok: {
       allowComment: true,
       content: '',
