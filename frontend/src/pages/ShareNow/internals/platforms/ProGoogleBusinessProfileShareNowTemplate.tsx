@@ -3,7 +3,6 @@ import { __ } from '@common/helpers/i18nWrap'
 import { propertiesToUploadFile } from '@pages/ShareNow/helpers/postBoxHelper'
 import ShareNowPostTypeCheckBox from '@pages/ShareNow/internals/platforms/ShareNowPostTypeCheckBox'
 import { type Attachment, type ShareNowType } from '@pages/ShareNow/ShareNowType'
-import { buttonOptions } from '@pages/SocialTemplates/internals/ProGoogleBusinessProfileSettings'
 import {
   Button,
   Card,
@@ -137,7 +136,7 @@ export default function ProGoogleBusinessProfileShareNowTemplate() {
         <Form.Item htmlFor="textBox" label={__('Add a button (optional)')}>
           <Select
             onChange={handleButton}
-            options={buttonOptions}
+            options={[]}
             placeholder={__('Select Button')}
             showArrow
             value={shareNowData.templates.googleBusinessProfile.button}

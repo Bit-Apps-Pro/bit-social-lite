@@ -5,7 +5,6 @@ import { type SocialTemplates } from '@common/globalStates/socialTemplates/Socia
 import { __ } from '@common/helpers/i18nWrap'
 import { autoSaveNotify } from '@common/helpers/toastMessage'
 import useMemoDebounce from '@common/hooks/useMemoDebounce'
-import ImagePromptNameSelect from '@utilities/ImagePromptNameSelect'
 import MessageBox from '@utilities/MessageBox'
 import { Card, Col, Flex, message, Row, Select, Space, Switch, theme, Typography } from 'antd'
 import { produce } from 'immer'
@@ -132,12 +131,7 @@ export default function FacebookSettings() {
                     description={__('Select an AI prompt for image generation.')}
                     title={__('Prompt Name')}
                   />
-                  <div>
-                    <ImagePromptNameSelect
-                      onChange={val => handleChange('promptImage', val)}
-                      value={templates.facebook.promptImage}
-                    />
-                  </div>
+                  <div></div>
                 </Flex>
               </Card>
             )}

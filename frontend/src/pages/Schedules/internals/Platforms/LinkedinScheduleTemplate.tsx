@@ -7,7 +7,6 @@ import { type ScheduleTemplatesType, type ScheduleType } from '@pages/Schedules/
 import useSocialTemplates from '@pages/SocialTemplates/data/useSocialTemplates'
 import { Loading } from '@src/AppRoutes'
 import { useWpMediaPicker } from '@src/hooks/useWpMediaPicker'
-import ImagePromptNameSelect from '@utilities/ImagePromptNameSelect'
 import MessageBox from '@utilities/MessageBox'
 import { Button, Checkbox, Image, Space, Tooltip, Typography } from 'antd'
 import { produce } from 'immer'
@@ -68,14 +67,6 @@ export default function LinkedinScheduleTemplate() {
         if (wasCustomImage && name !== 'isCustomImage') {
           draftSchedule.templates.linkedin.customImages = []
         }
-      })
-    )
-  }
-
-  const handlePromptChange = (value: string) => {
-    setScheduleData((prevSchedule: ScheduleType) =>
-      produce(prevSchedule, draftSchedule => {
-        draftSchedule.templates.linkedin.promptImage = value
       })
     )
   }
@@ -166,10 +157,6 @@ export default function LinkedinScheduleTemplate() {
       {scheduleData.templates.linkedin.isPromptImage && (
         <div className="mb-3">
           <Typography.Text strong>{__('Prompt Name')}</Typography.Text>
-          <ImagePromptNameSelect
-            onChange={handlePromptChange}
-            value={scheduleData.templates.linkedin.promptImage}
-          />
         </div>
       )}
 

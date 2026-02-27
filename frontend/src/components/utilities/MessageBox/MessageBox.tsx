@@ -8,8 +8,6 @@ import { useAtomValue, useSetAtom } from 'jotai'
 import React, { memo, useRef } from 'react'
 import { LuCrown, LuTags } from 'react-icons/lu'
 
-import PromptTags from './PromptTags'
-
 interface MessageBoxType extends Omit<TextAreaProps, 'onChange'> {
   label?: React.ReactNode
   onChange?: (value: string) => void
@@ -113,7 +111,16 @@ function MessageBox({
         <Col span={10}>{label}</Col>
         <Col span={14}>
           <Flex align="center" css={{ marginBottom: 8 }} justify="end">
-            {promptBox && <PromptTags handleSmartTag={handleSmartTag} />}
+            {promptBox && (
+              <Button
+                icon={<LuCrown color="#ff8609" size={18} />}
+                onClick={() => setProModalOpen(true)}
+                size="small"
+                type="text"
+              >
+                {__('Prompt Tags')}
+              </Button>
+            )}
             <>
               <Popover
                 content={popoverContent}
