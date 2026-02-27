@@ -201,9 +201,6 @@ importers:
       autoprefixer:
         specifier: ^10.4.20
         version: 10.4.21(postcss@8.5.6)
-      baseline-browser-mapping:
-        specifier: ^2.10.0
-        version: 2.10.0
       bitapps-dev-utils:
         specifier: github:Bit-Apps-Pro/bitapps-dev-utils#9687003a3bc25902aaf82cfe7408041b33b3dba8
         version: https://codeload.github.com/Bit-Apps-Pro/bitapps-dev-utils/tar.gz/9687003a3bc25902aaf82cfe7408041b33b3dba8(lodash@4.17.21)
