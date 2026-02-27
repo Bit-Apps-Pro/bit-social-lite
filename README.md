@@ -7,13 +7,13 @@ Bit Social is a WordPress plugin for social media auto-posting and scheduling.
 1. Clone the repository:
 
 ```bash
-git clone https://github.com/Bit-Apps-Pro/bit-social-lite.git
+git clone https://github.com/Bit-Apps-Pro/bit-social-lite.git bit-social
 ```
 
 2. Navigate into the project directory:
 
 ```bash
-cd bit-social-lite
+cd bit-social
 ```
 
 3. Install dependencies:
